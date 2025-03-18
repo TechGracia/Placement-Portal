@@ -31,6 +31,8 @@ require_once("../db.php");
   <link rel="stylesheet" href="../css/_all-skins.min.css">
   <!-- Custom -->
   <link rel="stylesheet" href="../css/custom.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -63,68 +65,78 @@ require_once("../db.php");
                 </div>
                 <div class="box-body no-padding">
                   <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="index.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                    <li><a href="index.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
                     <li><a href="edit-company.php"><i class="fa fa-tv"></i> Update Profile</a></li>
                     <li><a href="create-job-post.php"><i class="fa fa-file-o"></i> Post Drive</a></li>
                     <li><a href="my-job-post.php"><i class="fa fa-file-o"></i> Current Drives</a></li>
                     <li><a href="job-applications.php"><i class="fa fa-file-o"></i> Drive Applications</a></li>
-                    <li><a href="mailbox.php"><i class="fa fa-envelope"></i> Mailbox</a></li>
+                    <li class="active"><a href="mailbox.php"><i class="fa fa-envelope"></i> Mailbox</a></li>
                     <li><a href="settings.php"><i class="fa fa-gear"></i> Settings</a></li>
                     <li><a href="resume-database.php"><i class="fa fa-user"></i> Resume Database</a></li>
                     <li><a href="../logout.php"><i class="fa fa-arrow-circle-o-right"></i> Logout</a></li>
+                  </ul>
                   </ul>
                 </div>
               </div>
             </div>
             <div class="col-md-9 bg-white padding-2">
+              <section class="content">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="box box-primary">
+                      <div class="box-header with-border">
+                        <h3 class="box-title" style="margin-bottom: 20px;">Mailbox</h3>
+                        <div class="pull-right">
+                          <a href="create-mail.php" class="btn btn-warning btn-flat"><i class="fa fa-envelope"></i> Create</a>
+                        </div>
+                        <!-- /.box-tools -->
+                      </div>
+                      <!-- /.box-header -->
+                      <div class="box-body no-padding">
+                        <div class="table-responsive mailbox-messages">
+                          <table id="example1" class="table table-hover table-striped">
+                            <thead>
+                              <tr>
+                                <th>Subject</th>
+                                <th>Date</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <?php
+                              $sql = "SELECT * FROM mailbox WHERE id_fromuser='$_SESSION[id_company]' OR id_touser='$_SESSION[id_company]'";
+                              $result = $conn->query($sql);
+                              if ($result->num_rows >  0) {
+                                while ($row = $result->fetch_assoc()) {
+                              ?>
+                                  <tr>
+                                    <td class="mailbox-subject"><a href="read-mail.php?id_mail=<?php echo $row['id_mailbox']; ?>"><?php echo $row['subject']; ?></a></td>
+                                    <td class="mailbox-date"><?php echo date("d-M-Y h:i a", strtotime($row['createdAt'])); ?></td>
+                                  </tr>
+                              <?php
+                                }
+                              }
+                              ?>
+                            </tbody>
+                            <tfoot>
+                              <tr>
+                                <th>Subject</th>
+                                <th>Date</th>
+                              </tr>
+                            </tfoot>
+                          </table>
+                          <!-- /.table -->
+                        </div>
+                        <!-- /.mail-box-messages -->
+                      </div>
+                      <!-- /.box-body -->
 
-              <h3>Overview</h3>
-              <div class="alert alert-info alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <i class="icon fa fa-info"></i> In this dashboard you are able to change your account settings, post and manage your jobs. Got a question? Do not hesitate to drop us a mail.
-              </div>
-
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="info-box bg-c-yellow">
-                    <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Job Posted</span>
-                      <?php
-                      $sql = "SELECT * FROM job_post WHERE id_company='$_SESSION[id_company]'";
-                      $result = $conn->query($sql);
-
-                      if ($result->num_rows > 0) {
-                        $total = $result->num_rows;
-                      } else {
-                        $total = 0;
-                      }
-
-                      ?>
-                      <span class="info-box-number"><?php echo $total; ?></span>
                     </div>
+                    <!-- /. box -->
                   </div>
+                  <!-- /.col -->
                 </div>
-                <div class="col-md-6">
-                  <div class="info-box bg-c-yellow">
-                    <span class="info-box-icon bg-green"><i class="ion ion-ios-browsers"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Application For Jobs</span>
-                      <?php
-                      $sql = "SELECT * FROM apply_job_post WHERE id_company='$_SESSION[id_company]'";
-                      $result = $conn->query($sql);
-
-                      if ($result->num_rows > 0) {
-                        $total = $result->num_rows;
-                      } else {
-                        $total = 0;
-                      }
-                      ?>
-                      <span class="info-box-number"><?php echo $total; ?></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <!-- /.row -->
+              </section>
 
             </div>
           </div>
@@ -135,9 +147,10 @@ require_once("../db.php");
 
     </div>
     <!-- /.content-wrapper -->
+
     <footer class="main-footer" style="margin-left: 0px;">
       <div class="text-center">
-        <strong>Copyright &copy; 2025 <a href="scsit@Davv">Placement Portal</a>.</strong> All rights
+        <strong>Copyright &copy; 2025 <a href="learningfromscratch.online">Placement Portal</a>.</strong> All rights
         reserved.
       </div>
     </footer>
@@ -153,6 +166,14 @@ require_once("../db.php");
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../js/adminlte.min.js"></script>
+  <!-- DataTables -->
+  <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(function() {
+      $('#example1').DataTable();
+    })
+  </script>
+
 </body>
 
 </html>
