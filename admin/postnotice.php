@@ -10,57 +10,61 @@ session_start();
 require_once("../db.php");
 
 
-
 if (isset($_POST['submit'])) {
 
-    // they take values using name attribute 
+    // Get form values
     $subject = $_POST['subject'];
     $notice = $_POST['input'];
     $audience = $_POST['audience'];
 
-
-    //Folder where you want to save your resume. THIS FOLDER MUST BE CREATED BEFORE TRYING
+    // Folder where resumes will be saved
     $folder_dir = "../uploads/resume/";
 
-    //Getting Basename of file. So if your file location is Documents/New Folder/myResume.pdf then base name will return myResume.pdf
-    $base = basename($_FILES['resume']['name']);
+    // Default file name (empty if no upload)
+    $file = "";
 
-    //This will get us extension of your file. So myResume.pdf will return pdf. If it was resume.doc then this will return doc.
-    $resumeFileType = pathinfo($base, PATHINFO_EXTENSION);
+    // Check if a file was uploaded without errors
+    if (isset($_FILES['resume']) && !empty($_FILES['resume']['name']) && $_FILES['resume']['error'] === UPLOAD_ERR_OK) {
+        $base = basename($_FILES['resume']['name']);
+        $resumeFileType = pathinfo($base, PATHINFO_EXTENSION);
 
-    //Setting a random non repeatable file name. Uniqid will create a unique name based on current timestamp. We are using this because no two files can be of same name as it will overwrite.
-    $file = uniqid() . "." . $resumeFileType;
+        // Optional: allow only certain file types
+        $allowed = ['pdf', 'doc', 'docx'];
+        if (!in_array(strtolower($resumeFileType), $allowed)) {
+            die("Invalid file type. Only PDF/DOC/DOCX allowed.");
+        }
 
-    //This is where your files will be saved so in this case it will be uploads/resume/newfilename
-    $filename = $folder_dir . $file;
+        // Generate unique file name
+        $file = uniqid() . "." . $resumeFileType;
+        $filename = $folder_dir . $file;
 
-    //We check if file is saved to our temp location or not.
-    if (file_exists($_FILES['resume']['tmp_name'])) {
+        // Move uploaded file to the folder
+        move_uploaded_file($_FILES['resume']['tmp_name'], $filename);
+    }
 
+    // Generate a unique hash
+    $hash = md5(uniqid());
 
+    // Prepare SQL statement to prevent SQL injection
+    $stmt = $conn->prepare("INSERT INTO notice(subject, notice, audience, resume, hash, date) VALUES (?, ?, ?, ?, ?, NOW())");
+    $stmt->bind_param("sssss", $subject, $notice, $audience, $file, $hash);
 
-
-        move_uploaded_file(
-            $_FILES["resume"]["tmp_name"],
-            $filename
-        );
+    if ($stmt->execute()) {
+        include 'sendmail.php';
+        header("Location: postnotice.php?success=1");
+        exit();
     }
 
 
 
 
-    $hash = md5(uniqid());
+    $stmt = $conn->prepare("INSERT INTO notice(subject, notice, audience, resume, hash, date) VALUES (?, ?, ?, ?, ?, NOW())");
+    $stmt->bind_param("sssss", $subject, $notice, $audience, $file, $hash);
 
+    if ($stmt->execute()) {
+            include 'sendmail.php';
+        header("Location: postnotice.php?success=1");
 
-
-
-
-
-    $sql = "INSERT INTO notice(subject,notice,audience,resume, hash,`date`) VALUES ('$subject','$notice','$audience','$file', '$hash',now())";
-
-    if ($conn->query($sql) === TRUE) {
-        include 'sendmail.php';
-        header("Location: postnotice.php");
         exit();
     }
 }
@@ -105,13 +109,14 @@ if (isset($_POST['submit'])) {
     <div class="row">
         <div class="col-xs-6 responsive">
             <section>
-                <div class="alert alert-success alert-dismissible" style="display: none;" id="truemsg">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Success!</h4>
-                    New Notice Successfully added
-                </div>
-
-                <form class="centre " action="" method="POST">
+                <?php if (isset($_GET['success'])): ?>
+                    <div class="alert alert-success alert-dismissible" id="truemsg">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fa fa-check"></i> Success!</h4>
+                        New Notice Successfully added
+                    </div>
+                <?php endif; ?>
+                                
                     <div>
                         <h4><strong> Post a new notice</strong></h4>
                     </div>
@@ -134,7 +139,8 @@ if (isset($_POST['submit'])) {
 
                     <br>
                     <div class="form-group mt-3">
-                        <textarea style="top:80px " type="input" class="input" name="input" id="input" placeholder="Notice" required></textarea>
+                        <textarea style="top:80px" class="input" name="input" id="input" placeholder="Notice" required></textarea>
+
                     </div>
 
                     <div class="form-group text-center option">
@@ -148,7 +154,8 @@ if (isset($_POST['submit'])) {
                         </select>
                     </div>
                     <div class="text-center">
-                        <button class="btn btn-primary btn-sm" id="submit" name="submit" type=" submit1">NOTIFY</button>
+                        <button class="btn btn-primary btn-sm" id="submit" name="submit" type="submit">NOTIFY</button>
+
 
                     </div><br>
                     <div>
@@ -207,11 +214,12 @@ if (isset($_POST['submit'])) {
                                     <td><?php echo $row['subject']; ?></td>
                                     <td><?php echo $row['notice']; ?></td>
                                     <td><?php echo $row['audience']; ?></td>
-                                    <?php if ($row['resume'] != '') { ?>
+                                    <?php if (isset($row['resume']) && $row['resume'] != ''): ?>
                                         <td><a href="../uploads/resume/<?php echo $row['resume']; ?>" download="<?php echo 'Notice'; ?>"><i class="fa fa-file"></i></a></td>
-                                    <?php } else { ?>
+                                   <?php else: ?>
                                         <td>No Resume Uploaded</td>
-                                    <?php } ?>
+                                    <?php endif; ?>
+
                                     <td><?php echo $row['date']; ?></td>
 
                                     <td><a id="delete" href="deletenotice.php?id=<?php echo $row['id']; ?>"><i class="fa fa-trash"></i></a></td>

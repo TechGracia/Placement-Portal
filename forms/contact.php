@@ -1,25 +1,37 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-  $receiving_email_address = 'contact@example.com';
+require __DIR__ . '/../vendor/autoload.php';
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $mail = new PHPMailer(true);
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';      // Gmail SMTP server
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'graciajopson@gmail.com';   // Your Gmail address
+        $mail->Password   = 'orpd usko ocbt dniy';      // Gmail App Password (NOT your normal password)
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
 
+        // Recipients
+        $mail->setFrom($_POST['email'], $_POST['name']); // From contact form
+        $mail->addAddress('receiver@example.com', 'Website Admin'); // Where the email goes
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = $_POST['subject'];
+        $mail->Body    = nl2br("Name: {$_POST['name']}<br>Email: {$_POST['email']}<br><br>Message:<br>{$_POST['message']}");
+        $mail->AltBody = "Name: {$_POST['name']}\nEmail: {$_POST['email']}\n\nMessage:\n{$_POST['message']}";
 
-  echo $contact->send();
+        $mail->send();
+        echo '<p style="color:green;">✅ Message sent successfully!</p>';
+    } catch (Exception $e) {
+        echo '<p style="color:red;">❌ Message could not be sent. Reason: ' . htmlspecialchars($mail->ErrorInfo) . '</p>';
+
+    }
+}
 ?>
