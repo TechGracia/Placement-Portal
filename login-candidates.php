@@ -13,7 +13,7 @@ if (isset($_SESSION['id_user']) || isset($_SESSION['id_company'])) {
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Placement Portal</title>
-  <link href="img/logo.png" rel="icon">
+  <link href="img/christlogo.png" rel="icon">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -60,7 +60,9 @@ if (isset($_SESSION['id_user']) || isset($_SESSION['id_company'])) {
       <a href="index.php" style="color:black"><b>Placement Portal</b></a>
     </div>
     <!-- /.login-logo -->
-    <div class="login-box-body bg-blue-200 text-black ">
+   <div class=" login-box-body bg-blue-200 text-black text-xl">
+
+
       <p class="login-box-msg text-2xl text-black">Student Login</p>
 
       <form method="post" action="checklogin.php " class="text-xl">
@@ -85,7 +87,10 @@ if (isset($_SESSION['id_user']) || isset($_SESSION['id_company'])) {
           </div>
           <!-- /.col -->
           <div class="col-xs-4">
-            <button type="submit" class="flex mx-auto mt-6 text-white bg-indigo-500 border-0 py-2 px-5 focus:outline-none hover:bg-indigo-600 rounded">Sign In</button>
+            <button type="submit" class="flex mx-auto mt-6 text-white bg-indigo-500 hover:bg-indigo-600 transform hover:-translate-y-1 hover:scale-105 transition duration-300 border-0 py-2 px-5 rounded">
+  Sign In
+</button>
+
           </div>
           <!-- /.col -->
         </div>

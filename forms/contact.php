@@ -27,11 +27,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Body    = nl2br("Name: {$_POST['name']}<br>Email: {$_POST['email']}<br><br>Message:<br>{$_POST['message']}");
         $mail->AltBody = "Name: {$_POST['name']}\nEmail: {$_POST['email']}\n\nMessage:\n{$_POST['message']}";
 
-        $mail->send();
-        echo '<p style="color:green;">✅ Message sent successfully!</p>';
-    } catch (Exception $e) {
-        echo '<p style="color:red;">❌ Message could not be sent. Reason: ' . htmlspecialchars($mail->ErrorInfo) . '</p>';
+        // Send email
+        if ($mail->send()) {
+            echo 'OK';
+        } else {
+            echo 'Error: ' . htmlspecialchars($mail->ErrorInfo);
+        }
 
+    } catch (Exception $e) {
+        echo 'Error: ' . htmlspecialchars($e->getMessage());
     }
 }
 ?>
+

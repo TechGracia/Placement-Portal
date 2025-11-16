@@ -21,8 +21,11 @@ if (isset($_GET)) {
 
 	if ($result1->num_rows > 0) {
 		$row1 = $result1->fetch_assoc();
-		$sum = $row1['hsc'] + $row1['ssc'] + $row1['ug'] + $row1['pg'];
-		$total = ($sum / 4);
+		$sum = (float)$row1['hsc'] + (float)$row1['ssc'] + (float)$row1['ug'] + (float)$row1['pg'];
+        $total = $sum / 4;
+
+ // Average of UG and PG marks
+	
 		$course1 = $row1['qualification'];
 	}
 

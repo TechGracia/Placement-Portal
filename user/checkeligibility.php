@@ -21,8 +21,11 @@ if (isset($_GET)) {
 
     if ($result1->num_rows > 0) {
         $row1 = $result1->fetch_assoc();
-        $sum = $row1['hsc'] + $row1['ssc'] + $row1['ug'] + $row1['pg'];
-        $total = ($sum / 4);
+        $sum = (int)$row1['hsc'] + (int)$row1['ssc'] + (int)$row1['ug'] + (int)$row1['pg'];
+        $total = $sum / 4;
+
+
+
         $course1 = $row1['qualification'];
     }
 

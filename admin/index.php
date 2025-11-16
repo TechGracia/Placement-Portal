@@ -42,7 +42,7 @@ if (isset($_SESSION['id_admin'])) {
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
-<body class="hold-transition login-page bg-gray-800 text-white">
+<body class="hold-transition login-page bg-blue-100 text-black">
 
 
   <?php
@@ -52,10 +52,12 @@ if (isset($_SESSION['id_admin'])) {
   <div class="login-box " id="sms">
 
     <div class="login-logo text-white">
-      <a style="color:white" href="../index.php">Placement Portal</a>
+     <a style="color:black" href="../index.php">Placement Portal</a>
+
     </div>
     <!-- /.login-logo -->
-    <div class="bg-gray-900 text-white login-box-body large">
+    <div class="bg-blue-200 text-black login-box-body large">
+
       <p class="login-box-msg mt-7">Admin Login</p>
       <style>
         .large {
@@ -98,13 +100,12 @@ if (isset($_SESSION['id_admin'])) {
           <input type="password" class="form-control" name="password" placeholder="Password">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
-        <div class="row">
-          <!-- /.col -->
-          <div class="col-xs-4">
-            <button type="submit" class="btn btn-primary btn-block btn-flat" class=" transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">Sign In</button>
-          </div>
-          <!-- /.col -->
-        </div>
+        <div class="flex justify-center mt-4">
+  <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 transform hover:-translate-y-1 hover:scale-105">
+    Sign In
+  </button>
+</div>
+
         <?php
         //If User Failed To log in then show error message.
         if (isset($_SESSION['loginError'])) {

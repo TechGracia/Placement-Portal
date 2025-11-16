@@ -107,14 +107,15 @@ require_once("../db.php");
                           <label for="state">State</label>
                           <input type="text" class="form-control input-lg" id="state" name="state" placeholder="state" value="<?php echo $row['state']; ?>">
                         </div>
-                        <div class="form-group">
-                          <label for="Marks">HSC Marks</label>
+                         <div class="form-group">
+                          <label for="Marks">10th Marks</label>
                           <input type="text" class="form-control input-lg" id="Marks" name="hsc" placeholder="Percentage/CGPA" value="<?php echo $row['hsc']; ?>">
                         </div>
                         <div class="form-group">
-                          <label for="Marks">SSC Marks</label>
+                          <label for="Marks">12th Marks</label>
                           <input type="text" class="form-control input-lg" id="Marks" name="ssc" placeholder="Percentage/CGPA" value="<?php echo $row['ssc']; ?>">
                         </div>
+                        
 
                         <div class="form-group">
                           <button type="submit" class="btn btn-flat btn-success">Update Profile</button>
@@ -141,12 +142,13 @@ require_once("../db.php");
                           <label>About Me</label>
                           <textarea class="form-control input-lg" rows="4" name="aboutme"><?php echo $row['aboutme']; ?></textarea>
                         </div>
+                         
                         <div class="form-group">
-                          <label for="Marks">UG Marks</label>
+                          <label for="Marks">BCA Marks</label>
                           <input type="text" class="form-control input-lg" id="Marks" name="ug" placeholder="Percentage/CGPA" value="<?php echo $row['ug']; ?>">
                         </div>
                         <div class="form-group">
-                          <label for="Marks">PG Marks</label>
+                          <label for="Marks">MCA Marks</label>
                           <input type="text" class="form-control input-lg" id="Marks" name="pg" placeholder="Percentage/CGPA" value="<?php echo $row['pg']; ?>">
                         </div>
                         <div class="form-group">

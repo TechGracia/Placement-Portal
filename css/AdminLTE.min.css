@@ -80,7 +80,7 @@ body {
 }
 .content-wrapper {
   min-height: 100%;
-  background-color: #ecf0f5;
+  background-color: #F9FBFD;
   z-index: 800;
 }
 .main-footer {
@@ -334,11 +334,11 @@ a:focus {
     top: 0;
     right: 0;
     float: none;
-    background: #d2d6de;
+    background: #F9FBFD;
     padding-left: 10px;
   }
   .content-header > .breadcrumb li:before {
-    color: #97a0b3;
+    color: #F9FBFD;
   }
 }
 .navbar-toggle {

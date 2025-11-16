@@ -80,7 +80,10 @@ if (isset($_SESSION['id_user']) || isset($_SESSION['id_company'])) {
           </div>
           <!-- /.col -->
           <div class="col-xs-4">
-            <button type="submit" name="submit" class="flex mx-auto mt-6 text-white bg-indigo-500 border-0 py-2 px-5 focus:outline-none hover:bg-indigo-600 rounded"">Sign In</button>
+            <button type="submit" name="submit" class="flex mx-auto mt-6 text-white bg-indigo-500 hover:bg-indigo-600 transform hover:-translate-y-1 hover:scale-105 transition duration-300 border-0 py-2 px-5 rounded focus:outline-none">
+  Sign In
+</button>
+
           </div>
 
           <!-- /.col -->
